@@ -153,16 +153,7 @@ from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 
 ```python
-text = final['extracted_0'].values
-```
-
-
-```python
 text = " ".join(title for title in final['extracted_0'])
-```
-
-
-```python
 stopwords = set(STOPWORDS)
 stopwords.update(["national", "state"])
 wordcloud = WordCloud(
@@ -181,7 +172,32 @@ plt.show()
 ```
 
 
-![png](output_20_0.png)
+![png](output_18_0.png)
+
+
+
+```python
+top = final.sort_values('score', ascending=False).head(100)
+text = " ".join(title for title in top['extracted_0'])
+stopwords = set(STOPWORDS)
+stopwords.update(["national", "state"])
+wordcloud = WordCloud(
+    width = 3000,
+    height = 2000,
+    background_color = 'black',
+    stopwords = stopwords).generate(text)
+fig = plt.figure(
+    figsize = (40, 30),
+    facecolor = 'k',
+    edgecolor = 'k')
+plt.imshow(wordcloud, interpolation = 'bilinear')
+plt.axis('off')
+plt.tight_layout(pad=0)
+plt.show()
+```
+
+
+![png](output_19_0.png)
 
 
 ### Let's look at the score, which shows how many "upvotes" a particular submission received.  This is a proxy for how popular each submission was.
@@ -283,17 +299,17 @@ final.hist('score')
 
 
 
-    array([[<matplotlib.axes._subplots.AxesSubplot object at 0x1a2e3771d0>]],
+    array([[<matplotlib.axes._subplots.AxesSubplot object at 0x1a2fc35e80>]],
           dtype=object)
 
 
 
 
-![png](output_24_1.png)
+![png](output_23_1.png)
 
 
 
-![png](output_24_2.png)
+![png](output_23_2.png)
 
 
 
@@ -312,17 +328,17 @@ final.hist('score')
 
 
 
-    array([[<matplotlib.axes._subplots.AxesSubplot object at 0x1a2e37ce10>]],
+    array([[<matplotlib.axes._subplots.AxesSubplot object at 0x1a27fc9e80>]],
           dtype=object)
 
 
 
 
-![png](output_26_1.png)
+![png](output_25_1.png)
 
 
 
-![png](output_26_2.png)
+![png](output_25_2.png)
 
 
 There numerous posts that only get a few upvotes while a small number can get thousands.  The median upvote score is only 11, while the average is 97, showing a significant right skew.  Maybe we should plot the most popular submissions to see if there are any differences.
@@ -344,12 +360,12 @@ final.plot(x='Day of Submission', y='score', figsize=(12,8))
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a2ea6ea58>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a30956ac8>
 
 
 
 
-![png](output_30_1.png)
+![png](output_29_1.png)
 
 
 
@@ -369,7 +385,7 @@ plt.title('Count of Submissions by Month, Colored by Year')
 
 
 
-![png](output_31_1.png)
+![png](output_30_1.png)
 
 
 
@@ -384,7 +400,7 @@ ax.get_legend().set_bbox_to_anchor((1, 1))
 ```
 
 
-![png](output_32_0.png)
+![png](output_31_0.png)
 
 
 
@@ -414,10 +430,14 @@ plt.title('Count of Submissions by Month, Colored by Season')
 
 
 
-![png](output_34_1.png)
+![png](output_33_1.png)
 
+
+This chart is misleading in that we only have data for two months (January and February) of winter 2017.  Additionally, We only have one month (September) of fall 2019 and just two months (January and February) of winter 2019.
 
 ### What places are mentioned in the submissions?
+
+First we'll create a dataframe of submissions that only have the United States as country.  We'll use groupby statements to get a count of total submissions and the sum of the total number of upvotes (score) for each state.  We'll also add a column for color to make plotting this data easier.  Then we'll do the same thing for all other countries, but aggregate by country.  This will allow us to compare counts across US states and countires directly.
 
 
 ```python
@@ -448,6 +468,8 @@ rest_totals['color'] = 'grey'
 all_totals = us_totals.append(rest_totals)
 ```
 
+Since there are so many states and countries, we'll just look at those with more than 50 total submissions.
+
 
 ```python
 all_totals = all_totals.sort_values('count',ascending=True)
@@ -455,12 +477,15 @@ all_totals_subset = all_totals[all_totals['count'] > 50]
 f, ax = plt.subplots(figsize=(8,14))
 plt.barh(y=all_totals_subset.index, width=all_totals_subset['count'], 
          color=all_totals_subset['color'])
+plt.title('Count of Submissions by US State or Country')
 plt.show()
 ```
 
 
-![png](output_39_0.png)
+![png](output_41_0.png)
 
+
+We'll now use the same dataframe to print the top states and countries by total upvotes.  Here we'll set a threshold of 100.
 
 
 ```python
@@ -469,14 +494,17 @@ all_totals_subset = all_totals[all_totals['count'] > 100]
 f, ax = plt.subplots(figsize=(8,14))
 plt.barh(y=all_totals_subset.index, width=all_totals_subset['score_total'], 
          color=all_totals_subset['color'])
+plt.title('Total Score of All Submissions by US State or Country')
 plt.show()
 ```
 
 
-![png](output_40_0.png)
+![png](output_43_0.png)
 
 
 ### Plotting places from the submissions
+
+Next, we'll use geopandas and some shapefiles to plot the submissions globally and across the US.
 
 
 ```python
@@ -491,16 +519,15 @@ world_gdf = gpd.read_file('ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp
 world_gdf = world_gdf[world_gdf['NAME'] != 'Antarctica']
 ```
 
+Lets normalize the 'score' fields so we can use it to plot size.  We'll then multiply it with a scalar so it works with the size of our map.  We then use geopanda's point function to convert our latitudes and longitudes.
+
 
 ```python
-# Lets normalize the 'score' fields so we can use it to plot size.
 final['normed_score'] = 150*(final['score']-min(final['score']))/(max(final['score'])-min(final['score']))
 sites = gpd.GeoDataFrame(final, geometry=[Point(x, y) 
                                            for x, y in zip(final['lon'],final['lat'])])
 
 ```
-
-Now, lets take our latitudes and longitudes from the GoogleMap API and turn them into points using Geopandas "Point" function.  This will let us layer the points on our basemap from before.
 
 
 ```python
@@ -528,7 +555,7 @@ ax.axis('off')
 
 
 
-![png](output_46_1.png)
+![png](output_50_1.png)
 
 
 Great!  We can finally see where our most popular photos were taken!  As suspected, there is a huge bias to the United States.
@@ -536,6 +563,8 @@ Great!  We can finally see where our most popular photos were taken!  As suspect
 
 
 ## Can we plot just the Continental United States?
+
+We'll make the same conversions but use a different scalar for the normalized score since the map size is different.
 
 
 ```python
@@ -574,7 +603,7 @@ plt.show()
 ```
 
 
-![png](output_51_0.png)
+![png](output_56_0.png)
 
 
 ## Choropleth Maps
@@ -604,7 +633,7 @@ ax.axis('off')
 
 
 
-![png](output_54_1.png)
+![png](output_59_1.png)
 
 
 
@@ -630,7 +659,7 @@ ax.axis('off')
 
 
 
-![png](output_55_1.png)
+![png](output_60_1.png)
 
 
 ## Heat Map of the World!
@@ -664,7 +693,7 @@ ax.set_title('r/Hiking Submissions by Count of Submissions, Jan 2017 through Sep
 
 
 
-![png](output_58_1.png)
+![png](output_63_1.png)
 
 
 
@@ -685,16 +714,15 @@ ax.set_title('r/Hiking Submissions by Total Score of Submissions, Jan 2017 throu
 
 
 
-![png](output_59_1.png)
+![png](output_64_1.png)
 
 
 ## Key Findings And Conclusions
 
-Overall, the r/Hiking subreddit is increasing in popularity with more submissions year over year since 2017, and more upvotes as well.  As expected, there is a sginificant bias in the United States, and to a lesser extent Canada.  This is to be expected on an English lanaguage sub-reddit, but the scale of it was greater than anticipated.  
+Overall, the r/Hiking subreddit is increasing in popularity with more submissions and upvotes year over year since 2017.  There appears to be a significant bias toward the United States, and to a lesser extent Canada.  This is to be expected on an English lanaguage sub-reddit, but the scale of it was not anticipated.  
 
-For geogrpahic trends in the US, there is a high concentration across California, the state with the highest number of submissions and the third highest total score of upvotes.  However, Washington was remarkable for having the highest total score while ranking third on number of submissions.  This suggests that submissions featuring hiking destinations in Washington on average score higher than submissions from California.  There are also hotspots near concentrations of national parks and mountian ranges, as well as along coasts.  The word cloud support frequent submissions featuring trails, hikes, lakes, mountians, and falls.
+For geographic trends in the US, there is a high concentration across California, the state with the highest number of submissions and the third highest total score of upvotes.  However, Washington was remarkable for having the highest total score while ranking third on number of submissions.  This suggests that submissions featuring hiking destinations in Washington on average score higher than submissions from California.  There are also hotspots near concentrations of national parks and mountian ranges, as well as along coasts.
 
-I analyzed seasonality to look for trends in both time and space for the four different seasons.  Overall, the summer and spring are more popular times for submissions.  However, I did not observe any strong trends spatially based on season.  A more detailed analysis of state by state totals and averages across the four season could identify unobserved trends.
+I analyzed seasonality to look for trends in both time and space for the four different seasons.  Overall, the summer and spring are more popular times for submissions.  However, I did not observe any strong trends spatially based on season.  A more detailed analysis of state by state totals and averages across the four season could identify unobserved trends.  Additionally, complete data for each season year over year would make this comparison more effective.
 
-In conclusion, if you want a high scoring post on Reddit's r/Hiking, your best bet is to fly out to Washington and get some excellent photos of the beautiful scenery in the summer or spring.
-
+In conclusion, if you want a high scoring post on Reddit's r/Hiking, your best bet is to fly out to the Pacific Northwest and get some excellent photos of the beautiful scenery in the late Summer.  Judging from the wordcloud, submissions with "Park", "Lake", and "Trail" in the title have often appeared in the top 100.
