@@ -1,11 +1,11 @@
-# Analysis of Submissions to r/Hiking, January 2017 through October 2019
+# Analysis of Submissions to r/Hiking, January 2017 through September 2019
 
-Welcome!  This is an analysis of Reddit's r/hiking subreddit from January 2017 through October 2019.  All analysis was conducted using Python 3.7 and PostGreSQL for data warehousing.  The code for this project is spread across three different Python Notebooks.
+Welcome!  This is an analysis of Reddit's r/hiking subreddit from January 2017 through September 2019.  All analysis was conducted using Python 3.7 and PostGreSQL for data warehousing.  The code for this project is spread across three different Python Notebooks.
 
 ## Scraping and Processing Data
 [Link to notebook](https://redhairedcelt.github.io/reddit_hiking_analysis/Reddit_API_Scrape_Process.html)
 
-I used the Python-Reddit API Wrapper (PRAW module) in conjuntion the PushShift API to scrape r/Hiking for all submissions from January 2017 to October 2019.  Because Reddit limits API pulls to 1,000, I couldnt use it to directly scrape the 40,000+ submissions.  The first step was to use PushShift to search for all Reddit IDs in r/Hiking during that time period, which were saved as csvs and in memory.  I then used the Reddit API to query each individual Reddit ID to get its title, number of upvotes (score), number of comments, and date published.  All information returned from Reddit was immediately stored in a PostGres database.
+I used the Python-Reddit API Wrapper (PRAW module) in conjuntion the PushShift API to scrape r/Hiking for all submissions from January 2017 to September 2019.  Because Reddit limits API pulls to 1,000, I couldnt use it to directly scrape the 40,000+ submissions.  The first step was to use PushShift to search for all Reddit IDs in r/Hiking during that time period, which were saved as csvs and in memory.  I then used the Reddit API to query each individual Reddit ID to get its title, number of upvotes (score), number of comments, and date published.  All information returned from Reddit was immediately stored in a PostGres database.
 
 I then used regular expressions to extract likely place names, conditioned them for use with Google Maps geocoding API, and then passed all of them through the API.  Luckily, you can get 40,000 geocoding calls a month for free!  All of these calls returned JSON,  which was also stored in PostGres.
 
