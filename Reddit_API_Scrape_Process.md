@@ -200,6 +200,8 @@ places = places.replace({None:np.nan})
 
 ### Example of using GoogleMap API 
 
+The API is accessed by passing the below url, the API key, and the converted address together.  The result is a variable length JSON object.  As shown below, we can use a dictionary to store the most relevenat metadata into an easily parsable object, no matter the length of the JSON object.
+
 
 ```python
 address = 'George+Washington+University'

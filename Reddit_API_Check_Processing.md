@@ -72,9 +72,8 @@ places = places.replace({None:np.nan})
 
 
 ```python
-# During testing, multiple runs introduced several duplicates.  Since this
-# class focuses on Python, I handled the duplicates here rather than in 
-# the database itself.
+# During testing, multiple runs introduced several duplicates.  
+# I handled the duplicates here rather than in the database itself.
 
 c = conn.cursor()
 # select all rows from the geocoded_addresses table
@@ -157,6 +156,32 @@ print('Rows in final df:', len(final_full))
     Rows geocoded accurately: 30940
     Rows with geocoding errors 3012
     Rows in final df: 30940
+
+
+
+```python
+# Percent of rows successfully extracted that were converted by geocoding
+len(results)/len(df_extracted)
+```
+
+
+
+
+    0.9112865221489161
+
+
+
+
+```python
+# Percent of rows al rows from Reddit that were converted by geocoding
+len(results)/len(df_raw_reddit)
+```
+
+
+
+
+    0.7047835990888383
+
 
 
 ## Are all the rows extracted from the RegEx in the Geocoded table?
