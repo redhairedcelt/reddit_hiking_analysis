@@ -394,8 +394,8 @@ plt.figure(figsize=(12,6))
 ax = sns.boxplot(x='Month of Submission', y='score',  hue='Year of Submission', data=final)
 plt.ylim(bottom=-2)
 plt.ylim(top=200)
-plt.ylabel('Number of Submissions')
-plt.title('Boxplot of Submissions by Month, Colored by Year')
+plt.ylabel('Submission Score')
+plt.title('Boxplot of Submission Scores by Month, Colored by Year')
 ax.get_legend().set_bbox_to_anchor((1, 1))
 ```
 
@@ -726,3 +726,8 @@ For geographic trends in the US, there is a high concentration across California
 I analyzed seasonality to look for trends in both time and space for the four different seasons.  Overall, the summer and spring are more popular times for submissions.  However, I did not observe any strong trends spatially based on season.  A more detailed analysis of state by state totals and averages across the four season could identify unobserved trends.  Additionally, complete data for each season year over year would make this comparison more effective.
 
 In conclusion, if you want a high scoring post on Reddit's r/Hiking, your best bet is to fly out to the Pacific Northwest and get some excellent photos of the beautiful scenery in the late Summer.  Judging from the wordcloud, submissions with "Park", "Lake", and "Trail" in the title have often appeared in the top 100.
+
+
+```python
+
+```
