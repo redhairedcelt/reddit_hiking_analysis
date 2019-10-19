@@ -299,7 +299,7 @@ final.hist('score')
 
 
 
-    array([[<matplotlib.axes._subplots.AxesSubplot object at 0x1a2fc35e80>]],
+    array([[<matplotlib.axes._subplots.AxesSubplot object at 0x1a33f26390>]],
           dtype=object)
 
 
@@ -328,7 +328,7 @@ final.hist('score')
 
 
 
-    array([[<matplotlib.axes._subplots.AxesSubplot object at 0x1a27fc9e80>]],
+    array([[<matplotlib.axes._subplots.AxesSubplot object at 0x1a22dcd358>]],
           dtype=object)
 
 
@@ -360,7 +360,7 @@ final.plot(x='Day of Submission', y='score', figsize=(12,8))
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a30956ac8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a33e9ce80>
 
 
 
@@ -600,10 +600,83 @@ cont_us_map.axis('off')
 cont_us_map.legend()
 cont_us_map.set_title('r/Hiking Submissions, Jan 2017 through Sep 2019, Colored by Season, Sized by Score', fontsize=20)
 plt.show()
+
 ```
 
 
 ![png](output_56_0.png)
+
+
+### Individual Plots for Each Season
+
+Even with adjusted alpha values, the layering of all four seasons can make the last season plotted (in this case Summer) seem more prevalent.  The following four maps show each season on its own.  As a future option, I could make the map interactive so the user can adjust the layers themselves.
+
+
+```python
+cont_us_map = cont_us.plot(color='lightgrey', edgecolor='black', figsize=(18,12))
+cont_us_map.set_aspect('equal')
+
+cont_us_sites[cont_us_sites['Season']=='Fall'].plot(ax=cont_us_map, label='Fall',marker='o',
+                                                    markersize='normed_score', color='brown', alpha=.65)
+
+cont_us_map.axis('off')
+cont_us_map.legend()
+cont_us_map.set_title('r/Hiking Submissions, Jan 2017 through Sep 2019, Colored by Season, Sized by Score', fontsize=20)
+plt.show()
+```
+
+
+![png](output_59_0.png)
+
+
+
+```python
+cont_us_map = cont_us.plot(color='lightgrey', edgecolor='black', figsize=(18,12))
+cont_us_map.set_aspect('equal')
+cont_us_sites[cont_us_sites['Season']=='Winter'].plot(ax=cont_us_map, label='Winter', marker='o', 
+                                                      markersize='normed_score', color='blue', alpha=.6)
+cont_us_map.axis('off')
+cont_us_map.legend()
+cont_us_map.set_title('r/Hiking Submissions, Jan 2017 through Sep 2019, Colored by Season, Sized by Score', fontsize=20)
+plt.show()
+```
+
+
+![png](output_60_0.png)
+
+
+
+```python
+cont_us_map = cont_us.plot(color='lightgrey', edgecolor='black', figsize=(18,12))
+cont_us_map.set_aspect('equal')
+cont_us_sites[cont_us_sites['Season']=='Spring'].plot(ax=cont_us_map, label='Spring', marker='o', 
+                                                     markersize='normed_score', color='green', alpha=.6)
+cont_us_map.axis('off')
+cont_us_map.legend()
+cont_us_map.set_title('r/Hiking Submissions, Jan 2017 through Sep 2019, Colored by Season, Sized by Score', fontsize=20)
+plt.show()
+
+
+```
+
+
+![png](output_61_0.png)
+
+
+
+```python
+cont_us_map = cont_us.plot(color='lightgrey', edgecolor='black', figsize=(18,12))
+cont_us_map.set_aspect('equal')
+cont_us_sites[cont_us_sites['Season']=='Summer'].plot(ax=cont_us_map, label='Summer', marker='o', 
+                                                      markersize='normed_score', color='gold', alpha=.6)
+cont_us_map.axis('off')
+cont_us_map.legend()
+cont_us_map.set_title('r/Hiking Submissions, Jan 2017 through Sep 2019, Colored by Season, Sized by Score', fontsize=20)
+plt.show()
+```
+
+
+![png](output_62_0.png)
 
 
 ## Choropleth Maps
@@ -633,7 +706,7 @@ ax.axis('off')
 
 
 
-![png](output_59_1.png)
+![png](output_65_1.png)
 
 
 
@@ -659,7 +732,7 @@ ax.axis('off')
 
 
 
-![png](output_60_1.png)
+![png](output_66_1.png)
 
 
 ## Heat Map of the World!
@@ -693,7 +766,7 @@ ax.set_title('r/Hiking Submissions by Count of Submissions, Jan 2017 through Sep
 
 
 
-![png](output_63_1.png)
+![png](output_69_1.png)
 
 
 
@@ -714,7 +787,7 @@ ax.set_title('r/Hiking Submissions by Total Score of Submissions, Jan 2017 throu
 
 
 
-![png](output_64_1.png)
+![png](output_70_1.png)
 
 
 ## Key Findings And Conclusions
@@ -726,8 +799,3 @@ For geographic trends in the US, there is a high concentration across California
 I analyzed seasonality to look for trends in both time and space for the four different seasons.  Overall, the summer and spring are more popular times for submissions.  However, I did not observe any strong trends spatially based on season.  A more detailed analysis of state by state totals and averages across the four season could identify unobserved trends.  Additionally, complete data for each season year over year would make this comparison more effective.
 
 In conclusion, if you want a high scoring post on Reddit's r/Hiking, your best bet is to fly out to the Pacific Northwest and get some excellent photos of the beautiful scenery in the late Summer.  Judging from the wordcloud, submissions with "Park", "Lake", and "Trail" in the title have often appeared in the top 100.
-
-
-```python
-
-```
