@@ -2,7 +2,7 @@
 
 Welcome!  This is an analysis of Reddit's r/hiking subreddit from January 2017 through September 2019.  All analysis was conducted using Python 3.7 and PostGreSQL for data warehousing.  The code for this project is spread across three different Python Notebooks.
 
-Click ![here](https://imgur.com/a/JGuwkzL) for a high resolution map of all submissions in the continental US, colored by season and sized by total score.
+Click [here](https://imgur.com/a/JGuwkzL) for a high resolution map of all submissions in the continental US, colored by season and sized by total score.
 
 ## Scraping and Processing Data
 [Link to notebook](https://redhairedcelt.github.io/reddit_hiking_analysis/Reddit_API_Scrape_Process.html)
