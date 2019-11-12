@@ -12,7 +12,7 @@ I used the Python-Reddit API Wrapper (PRAW module) in conjuntion the PushShift A
 I then used regular expressions to extract likely place names, conditioned them for use with Google Maps geocoding API, and then passed all of them through the API.  Luckily, you can get 40,000 geocoding calls a month for free!  All of these calls returned JSON,  which was also stored in PostGres.
 
 ## Check Processing
-[Link to notebook](https://redhairedcelt.github.io/reddit_hiking_analysis/Reddit_API_Check_Processing.md)
+[Link to notebook](https://redhairedcelt.github.io/reddit_hiking_analysis/Reddit_API_Check_Processing.html)
 
 I wrote a separate script to ensure all Reddit IDs returned in the first phase were succsessfully passed through the geocoding API.  I had erronouesly assumed sequential returns when I had set up batch processing through the geocoding API, and had missed thousands of submissions.  This process acted as a unit test to ensure all submissions were processed.
 
